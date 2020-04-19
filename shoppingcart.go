@@ -18,7 +18,6 @@ var (
 	ErrCartItemAlreadyExists = errors.New("this product already added to shopping cart")
 	ErrCartItemNoProductSet  = errors.New("product is not specified")
 	ErrCartItemNoQuantitySet = errors.New("quantity is not specified")
-	ErrCartItemNoPriceSet    = errors.New("price is not specified")
 )
 
 // ShoppingCart describes shopping cart
@@ -59,7 +58,6 @@ type ShoppingCartItem struct {
 	ShoppingCartID int64     `json:"shoppingcart_id" gorm:"column:shoppingcart_id"`
 	ProductID      int64     `json:"product_id"`
 	Quantity       uint64    `json:"quantity"`
-	Price          uint64    `json:"price"`
 	CreatedAt      time.Time `json:"created_at"`
 	UpdatedAt      time.Time `json:"updated_at"`
 }
@@ -74,8 +72,6 @@ func (cartItem *ShoppingCartItem) Validate() error {
 		return ErrCartItemNoProductSet
 	case cartItem.Quantity == 0:
 		return ErrCartItemNoQuantitySet
-	case cartItem.Price == 0:
-		return ErrCartItemNoPriceSet
 	}
 
 	return nil

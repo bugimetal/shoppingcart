@@ -29,10 +29,21 @@ func (service *ShoppingCart) Get(ctx context.Context, ID, userID int64) (shoppin
 }
 
 // Empty removes items associated with shopping cart
-func (service *ShoppingCart) Empty(ctx context.Context, shoppingCartID int64) error {
+func (service *ShoppingCart) Empty(ctx context.Context, shoppingCartID, userID int64) error {
+	// Checking if shopping cart belong to this user
+	cart, err := service.Get(ctx, shoppingCartID, userID)
+	if err != nil {
+		return err
+	}
+
+	if len(cart.Items) == 0 {
+		return nil
+	}
+
 	return service.storage.Empty(ctx, shoppingCartID)
 }
 
+// AddProduct adds new product to existing shopping cart
 func (service *ShoppingCart) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
 	if err := cartItem.Validate(); err != nil {
 		return err
@@ -41,6 +52,17 @@ func (service *ShoppingCart) AddProduct(ctx context.Context, cartItem *shoppingc
 	return service.storage.AddProduct(ctx, cartItem)
 }
 
-func (service *ShoppingCart) RemoveProduct(ctx context.Context, shoppingCartID, productID int64) error {
+// AddProduct removes a product from existing shopping cart
+func (service *ShoppingCart) RemoveProduct(ctx context.Context, shoppingCartID, productID, userID int64) error {
+	// Checking if shopping cart belong to this user
+	cart, err := service.Get(ctx, shoppingCartID, userID)
+	if err != nil {
+		return err
+	}
+
+	if !cart.HasProduct(productID) {
+		return nil
+	}
+
 	return service.storage.RemoveProduct(ctx, shoppingCartID, productID)
 }

@@ -118,19 +118,7 @@ func (handler *Handler) emptyCart(w http.ResponseWriter, r *http.Request, ps htt
 		return
 	}
 
-	// Checking if shopping cart belong to this user
-	cart, err := handler.shoppingCartService.Get(r.Context(), ID, user.ID)
-	if err != nil {
-		handler.Error(w, r, err)
-		return
-	}
-
-	if len(cart.Items) == 0 {
-		handler.Error(w, r, shoppingcart.ErrCartHasNoItems)
-		return
-	}
-
-	if err := handler.shoppingCartService.Empty(r.Context(), ID); err != nil {
+	if err := handler.shoppingCartService.Empty(r.Context(), ID, user.ID); err != nil {
 		handler.Error(w, r, err)
 		logrus.Errorf("Unable to add empty shopping cart %d: %s", ID, err)
 		return
@@ -142,7 +130,7 @@ func (handler *Handler) emptyCart(w http.ResponseWriter, r *http.Request, ps htt
 // swagger:operation POST /v1/shoppingcart/{id}/item ShoppingCartItem addProduct
 // ---
 // summary: add product to existing shopping cart
-// description: If product already added to specified shopping cart, error will be returned
+// description:
 // parameters:
 // - name: id
 //   in: path
@@ -214,7 +202,7 @@ func (handler *Handler) addProduct(w http.ResponseWriter, r *http.Request, ps ht
 // swagger:operation DELETE /v1/shoppingcart/{id}/item/{product_id} ShoppingCartItem removeProduct
 // ---
 // summary: removes product from existing shopping cart
-// description: If product doesn't exists in specified shopping cart, error will be returned
+// description:
 // parameters:
 // - name: id
 //   in: path
@@ -255,19 +243,7 @@ func (handler *Handler) removeProduct(w http.ResponseWriter, r *http.Request, ps
 		return
 	}
 
-	// Checking if shopping cart belong to this user
-	cart, err := handler.shoppingCartService.Get(r.Context(), cartID, user.ID)
-	if err != nil {
-		handler.Error(w, r, err)
-		return
-	}
-
-	if !cart.HasProduct(productID) {
-		handler.Error(w, r, shoppingcart.ErrCartItemNotFound)
-		return
-	}
-
-	if err := handler.shoppingCartService.RemoveProduct(r.Context(), cartID, productID); err != nil {
+	if err := handler.shoppingCartService.RemoveProduct(r.Context(), cartID, productID, user.ID); err != nil {
 		handler.Error(w, r, err)
 		logrus.Errorf("Unable to remove shopping cart item (%d:%d): %s", cartID, productID, err)
 		return

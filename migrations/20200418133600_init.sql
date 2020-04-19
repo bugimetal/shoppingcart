@@ -16,7 +16,6 @@ CREATE TABLE IF NOT EXISTS `shoppingcart_item` (
     `shoppingcart_id` BIGINT NOT NULL,
     `product_id` BIGINT NOT NULL,
     `quantity` UNSIGNED INT NOT NULL DEFAULT 1,
-    `price` BIGINT NOT NULL,
     `created_at` TIMESTAMP NOT NULL,
     `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
     PRIMARY KEY (`id`),

@@ -11,7 +11,6 @@ func TestShoppingCartItem_Validate(t *testing.T) {
 		ShoppingCartID int64
 		ProductID      int64
 		Quantity       uint64
-		Price          uint64
 		CreatedAt      time.Time
 		UpdatedAt      time.Time
 	}
@@ -25,7 +24,6 @@ func TestShoppingCartItem_Validate(t *testing.T) {
 			fields: fields{
 				ShoppingCartID: 1,
 				Quantity:       1,
-				Price:          1000000,
 			},
 			wantErr: true,
 		},
@@ -34,16 +32,6 @@ func TestShoppingCartItem_Validate(t *testing.T) {
 			fields: fields{
 				ShoppingCartID: 1,
 				ProductID:      1,
-				Price:          1000000,
-			},
-			wantErr: true,
-		},
-		{
-			name: "no price",
-			fields: fields{
-				ShoppingCartID: 1,
-				ProductID:      1,
-				Quantity:       1,
 			},
 			wantErr: true,
 		},
@@ -53,7 +41,6 @@ func TestShoppingCartItem_Validate(t *testing.T) {
 				ShoppingCartID: 1,
 				ProductID:      1,
 				Quantity:       1,
-				Price:          1000000,
 			},
 			wantErr: false,
 		},
@@ -64,7 +51,6 @@ func TestShoppingCartItem_Validate(t *testing.T) {
 				ShoppingCartID: tt.fields.ShoppingCartID,
 				ProductID:      tt.fields.ProductID,
 				Quantity:       tt.fields.Quantity,
-				Price:          tt.fields.Price,
 			}
 			if err := cartItem.Validate(); (err != nil) != tt.wantErr {
 				t.Errorf("Validate() error = %v, wantErr %v", err, tt.wantErr)

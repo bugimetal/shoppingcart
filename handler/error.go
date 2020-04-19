@@ -20,7 +20,6 @@ var ErrorStatusCodes = map[error]int{
 	// Shopping cart item
 	shoppingcart.ErrCartItemNoProductSet:  http.StatusBadRequest,
 	shoppingcart.ErrCartItemNoQuantitySet: http.StatusBadRequest,
-	shoppingcart.ErrCartItemNoPriceSet:    http.StatusBadRequest,
 	shoppingcart.ErrCartItemNotFound:      http.StatusNotFound,
 	shoppingcart.ErrCartItemAlreadyExists: http.StatusBadRequest,
 }

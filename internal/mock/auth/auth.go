@@ -43,8 +43,15 @@ func (a *Auth) Authenticate(ctx context.Context, user User) (User, error) {
 	if err := user.Validate(); err != nil {
 		return user, err
 	}
-	// faking user ID
-	user.ID = 1
+
+	switch user.Name {
+	case "test":
+		user.ID = 1
+	case "hacker":
+		user.ID = 2
+	default:
+		user.ID = 3
+	}
 
 	return user, nil
 }

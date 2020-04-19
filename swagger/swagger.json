@@ -72,7 +72,6 @@
     },
     "/v1/shoppingcart/{id}/item": {
       "post": {
-        "description": "If product already added to specified shopping cart, error will be returned",
         "tags": [
           "ShoppingCartItem"
         ],
@@ -145,7 +144,6 @@
     },
     "/v1/shoppingcart/{id}/item/{product_id}": {
       "delete": {
-        "description": "If product doesn't exists in specified shopping cart, error will be returned",
         "tags": [
           "ShoppingCartItem"
         ],
@@ -198,11 +196,6 @@
           "type": "integer",
           "format": "int64",
           "x-go-name": "ID"
-        },
-        "price": {
-          "type": "integer",
-          "format": "uint64",
-          "x-go-name": "Price"
         },
         "product_id": {
           "type": "integer",
@@ -281,10 +274,6 @@
         "id": {
           "type": "integer",
           "format": "int64"
-        },
-        "price": {
-          "type": "integer",
-          "format": "uint64"
         },
         "product_id": {
           "type": "integer",
