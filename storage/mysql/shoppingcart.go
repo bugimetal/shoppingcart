@@ -7,6 +7,7 @@ import (
 	"github.com/bugimetal/shoppingcart"
 )
 
+// Create creates shopping cart in the storate
 func (db *DB) Create(ctx context.Context, cart *shoppingcart.ShoppingCart) error {
 	cart.CreatedAt = time.Now()
 	cart.UpdatedAt = cart.CreatedAt
@@ -16,6 +17,7 @@ func (db *DB) Create(ctx context.Context, cart *shoppingcart.ShoppingCart) error
 	return nil
 }
 
+// Get retrieves shopping cart from the storage along with items
 func (db *DB) Get(ctx context.Context, ID, userID int64) (shoppingcart.ShoppingCart, error) {
 	var cart shoppingcart.ShoppingCart
 	db.client.
@@ -30,11 +32,13 @@ func (db *DB) Get(ctx context.Context, ID, userID int64) (shoppingcart.ShoppingC
 	return cart, nil
 }
 
+// Empty removes items associated with shopping cart
 func (db *DB) Empty(ctx context.Context, shoppingCartID int64) error {
 	db.client.Where("shoppingcart_id = ?", shoppingCartID).Delete(shoppingcart.ShoppingCartItem{})
 	return nil
 }
 
+// AddProduct adds product to the shopping cart
 func (db *DB) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
 	cartItem.CreatedAt = time.Now()
 	cartItem.UpdatedAt = cartItem.CreatedAt
@@ -44,6 +48,7 @@ func (db *DB) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCar
 	return nil
 }
 
+// UpdateProduct updates product in the shopping cart
 func (db *DB) UpdateProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
 	cartItem.UpdatedAt = time.Now()
 
@@ -52,6 +57,7 @@ func (db *DB) UpdateProduct(ctx context.Context, cartItem *shoppingcart.Shopping
 	return nil
 }
 
+// RemoveProduct removes product from the shopping cart
 func (db *DB) RemoveProduct(ctx context.Context, shoppingCartID, productID int64) error {
 	db.client.
 		Where("shoppingcart_id = ? AND product_id = ?", shoppingCartID, productID).

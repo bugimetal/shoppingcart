@@ -21,3 +21,7 @@ where we pass user:password base64 encoded.
 3. run migrations `$(go env GOPATH)/bin/goose -dir=./migrations mysql "shoppingcart:secret@/shoppingcart?parseTime=true" up`
 4. `source .env.local` Set up default environment for local
 5. Start app `go run ./cmd/shoppingcart/`
+
+## 4. How to run tests
+
+go test -v github.com/bugimetal/shoppingcart/...

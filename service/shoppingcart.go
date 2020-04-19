@@ -6,10 +6,12 @@ import (
 	"github.com/bugimetal/shoppingcart"
 )
 
+// ShoppingCart service responsible for shopping cart operations
 type ShoppingCart struct {
 	storage ShoppingCartStorage
 }
 
+// NewShoppingCart returns a new Shopping cart service
 func NewShoppingCart(deps Dependencies) *ShoppingCart {
 	return &ShoppingCart{storage: deps.ShoppingCartStorage}
 }

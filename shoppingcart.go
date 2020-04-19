@@ -30,6 +30,7 @@ type ShoppingCart struct {
 	Items     []ShoppingCartItem `json:"items,omitempty" gorm:"foreignkey:ShoppingCartID;association_foreignkey:ID"`
 }
 
+// TableName specifies storage table name
 func (ShoppingCart) TableName() string {
 	return "shoppingcart"
 }
@@ -42,6 +43,7 @@ func (cart *ShoppingCart) Validate() error {
 	return nil
 }
 
+// HasProduct checks if shopping cart contains specific product
 func (cart *ShoppingCart) HasProduct(productID int64) bool {
 	for _, item := range cart.Items {
 		if item.ProductID == productID {
@@ -51,6 +53,7 @@ func (cart *ShoppingCart) HasProduct(productID int64) bool {
 	return false
 }
 
+// GetProduct retrieves product from shopping cart
 func (cart *ShoppingCart) GetProduct(productID int64) (ShoppingCartItem, error) {
 	for _, item := range cart.Items {
 		if item.ProductID == productID {
@@ -71,10 +74,12 @@ type ShoppingCartItem struct {
 	UpdatedAt      time.Time `json:"updated_at"`
 }
 
+// TableName specifies storage table name
 func (ShoppingCartItem) TableName() string {
 	return "shoppingcart_item"
 }
 
+// Validate validates ShoppingCartItem
 func (cartItem *ShoppingCartItem) Validate() error {
 	switch {
 	case cartItem.ProductID == 0:

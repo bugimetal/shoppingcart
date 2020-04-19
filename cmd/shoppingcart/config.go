@@ -4,6 +4,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
+// DatabaseConfig defines a configuration for database connection.
 type DatabaseConfig struct {
 	User     string `envconfig:"database_user"`
 	Password string `envconfig:"database_password"`
@@ -12,10 +13,12 @@ type DatabaseConfig struct {
 	Port     int    `envconfig:"database_port"`
 }
 
+// Config describes the relevant settings from environment variables.
 type Config struct {
 	Database DatabaseConfig
 }
 
+// New returns a Config which is populated by environment variables.
 func NewConfig() (*Config, error) {
 	config := &Config{}
 

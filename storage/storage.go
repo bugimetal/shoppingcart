@@ -6,6 +6,7 @@ import (
 	"github.com/bugimetal/shoppingcart"
 )
 
+// ShoppingCart describes an interface to store shopping carts and manipulate with products inside the cart
 type ShoppingCart interface {
 	Create(context.Context, *shoppingcart.ShoppingCart) error
 	Get(ctx context.Context, shoppingCartID int64, userID int64) (shoppingcart.ShoppingCart, error)

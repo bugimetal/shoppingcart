@@ -21,6 +21,7 @@ func New(user, password, host, database string, port int) (*DB, error) {
 	return &DB{client: db}, nil
 }
 
+// Close closes the connection to database
 func (db *DB) Close() {
 	if db.client != nil {
 		db.client.Close()
