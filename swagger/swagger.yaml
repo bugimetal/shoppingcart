@@ -1,0 +1,12 @@
+info:
+  description: "Shopping cart service"
+  title: "Shopping cart"
+  version: "1.0.0"
+schemes:
+  - http
+produces:
+  - application/json
+consumes:
+  - application/json
+servers:
+  - url: http://localhost:8080

@@ -1,0 +1,322 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "Documentation of API",
+    "title": "Shopping cart service",
+    "version": "1"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "paths": {
+    "/v1/shoppingcart": {
+      "post": {
+        "tags": [
+          "ShoppingCart"
+        ],
+        "summary": "Creates a shopping cart item and persist it in the storage",
+        "operationId": "createShoppingCart",
+        "responses": {
+          "201": {
+            "$ref": "#/responses/ShoppingCart"
+          },
+          "401": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/v1/shoppingcart/{id}": {
+      "get": {
+        "tags": [
+          "ShoppingCart"
+        ],
+        "summary": "Retrieves shopping cart from the storage along with shopping cart items",
+        "operationId": "getShoppingCart",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "shopping cart id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/ShoppingCart"
+          },
+          "401": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/v1/shoppingcart/{id}/item": {
+      "post": {
+        "description": "If product already added to specified shopping cart, error will be returned",
+        "tags": [
+          "ShoppingCartItem"
+        ],
+        "summary": "add product to existing shopping cart",
+        "operationId": "addProduct",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "shopping cart id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "shopping cart item",
+            "name": "item",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ShoppingCartItem"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "$ref": "#/responses/ShoppingCartItem"
+          },
+          "401": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      },
+      "delete": {
+        "description": "If shopping cart has no items to delete, error will be returned",
+        "tags": [
+          "ShoppingCart"
+        ],
+        "summary": "Removes shopping cart items from storage",
+        "operationId": "emptyCart",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "shopping cart id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {},
+          "401": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    },
+    "/v1/shoppingcart/{id}/item/{product_id}": {
+      "delete": {
+        "description": "If product doesn't exists in specified shopping cart, error will be returned",
+        "tags": [
+          "ShoppingCartItem"
+        ],
+        "summary": "removes product from existing shopping cart",
+        "operationId": "removeProduct",
+        "parameters": [
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "shopping cart id",
+            "name": "id",
+            "in": "path",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "format": "int64",
+            "description": "product id to delete",
+            "name": "product_id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {},
+          "401": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "404": {
+            "$ref": "#/responses/errorResponse"
+          },
+          "500": {
+            "$ref": "#/responses/errorResponse"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "ShoppingCartItem": {
+      "description": "ShoppingCartItem represents shopping cart entity",
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "CreatedAt"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ID"
+        },
+        "price": {
+          "type": "integer",
+          "format": "uint64",
+          "x-go-name": "Price"
+        },
+        "product_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ProductID"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "uint64",
+          "x-go-name": "Quantity"
+        },
+        "shoppingcart_id": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "ShoppingCartID"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "x-go-name": "UpdatedAt"
+        }
+      },
+      "x-go-package": "github.com/bugimetal/shoppingcart"
+    },
+    "errorResource": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Code"
+        },
+        "message": {
+          "type": "string",
+          "x-go-name": "Message"
+        }
+      },
+      "x-go-package": "github.com/bugimetal/shoppingcart/handler"
+    }
+  },
+  "responses": {
+    "ShoppingCart": {
+      "description": "ShoppingCart describes shopping cart",
+      "headers": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ShoppingCartItem"
+          }
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "user_id": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "ShoppingCartItem": {
+      "description": "ShoppingCartItem represents shopping cart entity",
+      "headers": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "price": {
+          "type": "integer",
+          "format": "uint64"
+        },
+        "product_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "uint64"
+        },
+        "shoppingcart_id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "errorResponse": {
+      "description": "errorResponse represents error response structure",
+      "schema": {
+        "$ref": "#/definitions/errorResource"
+      },
+      "headers": {
+        "error": {}
+      }
+    }
+  },
+  "securityDefinitions": {
+    "basic": {
+      "type": "basic"
+    }
+  }
+}
