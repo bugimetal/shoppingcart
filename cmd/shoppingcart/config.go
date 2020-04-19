@@ -18,7 +18,7 @@ type Config struct {
 	Database DatabaseConfig
 }
 
-// New returns a Config which is populated by environment variables.
+// NewConfig returns a Config which is populated by environment variables.
 func NewConfig() (*Config, error) {
 	config := &Config{}
 

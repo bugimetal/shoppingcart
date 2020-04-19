@@ -70,7 +70,7 @@ func (service *ShoppingCart) AddProduct(ctx context.Context, cartItem *shoppingc
 	return service.storage.AddProduct(ctx, cartItem)
 }
 
-// AddProduct removes a product from existing shopping cart
+// RemoveProduct removes a product from existing shopping cart
 func (service *ShoppingCart) RemoveProduct(ctx context.Context, shoppingCartID, productID, userID int64) error {
 	// Checking if shopping cart belong to this user
 	cart, err := service.Get(ctx, shoppingCartID, userID)

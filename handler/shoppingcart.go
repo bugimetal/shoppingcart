@@ -40,7 +40,9 @@ func (handler *Handler) createShoppingCart(w http.ResponseWriter, r *http.Reques
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(cart)
+	if err := json.NewEncoder(w).Encode(cart); err != nil {
+		logrus.Errorf("Unable to respond with cart %s", err)
+	}
 }
 
 // swagger:operation GET /v1/shoppingcart/{id} ShoppingCart getShoppingCart
@@ -83,7 +85,9 @@ func (handler *Handler) getShoppingCart(w http.ResponseWriter, r *http.Request, 
 	}
 
 	w.WriteHeader(http.StatusOK)
-	_ = json.NewEncoder(w).Encode(cart)
+	if err := json.NewEncoder(w).Encode(cart); err != nil {
+		logrus.Errorf("Unable to respond with cart %s", err)
+	}
 }
 
 // swagger:operation DELETE /v1/shoppingcart/{id}/item ShoppingCart emptyCart
@@ -181,8 +185,9 @@ func (handler *Handler) addProduct(w http.ResponseWriter, r *http.Request, ps ht
 	}
 
 	w.WriteHeader(http.StatusCreated)
-	_ = json.NewEncoder(w).Encode(cartItem)
-
+	if err := json.NewEncoder(w).Encode(cartItem); err != nil {
+		logrus.Errorf("Unable to respond with cart item %s", err)
+	}
 }
 
 // swagger:operation DELETE /v1/shoppingcart/{id}/item/{product_id} ShoppingCartItem removeProduct

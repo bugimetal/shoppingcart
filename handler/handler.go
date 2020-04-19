@@ -5,16 +5,24 @@ import (
 	"encoding/base64"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/bugimetal/shoppingcart"
 	"github.com/bugimetal/shoppingcart/internal/mock/auth"
 
+	"contrib.go.opencensus.io/exporter/prometheus"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
+	"go.opencensus.io/plugin/ochttp"
+	"go.opencensus.io/stats/view"
 )
 
 type key int
 
-var userKey key
+var (
+	exporter *prometheus.Exporter
+	userKey  key
+)
 
 // ShoppingCartService provides an interface to the service that deals with operations
 // on shopping cart and cart items.
@@ -45,6 +53,28 @@ type Handler struct {
 	authService         AuthService
 }
 
+func init() {
+	var err error
+
+	if err = view.Register(
+		ochttp.ServerRequestCountView,
+		ochttp.ServerRequestBytesView,
+		ochttp.ServerResponseBytesView,
+		ochttp.ServerLatencyView,
+		ochttp.ServerRequestCountByMethod,
+		ochttp.ServerResponseCountByStatusCode,
+	); err != nil {
+		logrus.Fatal(err)
+	}
+
+	exporter, err = prometheus.NewExporter(prometheus.Options{Namespace: "shoppingcart"})
+	if err != nil {
+		logrus.Fatalf("Unable to set up the opencensus prometheus exporter: %s", err)
+	}
+	view.RegisterExporter(exporter)
+	view.SetReportingPeriod(1 * time.Second)
+}
+
 // New returns a new Handler.
 func New(services Services) *Handler {
 	handler := &Handler{
@@ -54,6 +84,9 @@ func New(services Services) *Handler {
 
 	// Set up a custom HTTP router and install the routes on it.
 	router := httprouter.New()
+
+	router.Handler("GET", "/metrics", exporter)
+	router.GET("/health-check", healthCheck)
 
 	router.POST("/v1/shoppingcart", handler.authMiddleware(handler.createShoppingCart))
 	router.GET("/v1/shoppingcart/:id", handler.authMiddleware(handler.getShoppingCart))
@@ -65,7 +98,7 @@ func New(services Services) *Handler {
 	// Running swagger API documentation
 	router.ServeFiles("/swagger/*filepath", http.Dir("./swagger/"))
 
-	handler.http = router
+	handler.http = &ochttp.Handler{Handler: router}
 
 	return handler
 }
@@ -118,5 +151,11 @@ func (handler *Handler) authMiddleware(next httprouter.Handle) httprouter.Handle
 
 		ctx := context.WithValue(r.Context(), userKey, user)
 		next(w, r.WithContext(ctx), ps)
+	}
+}
+
+func healthCheck(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+	if _, err := w.Write([]byte("OK")); err != nil {
+		logrus.Println(err)
 	}
 }

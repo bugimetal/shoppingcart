@@ -24,10 +24,15 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/bugimetal/shoppingcart/handler"
 	"github.com/bugimetal/shoppingcart/internal/mock/auth"
@@ -73,6 +78,35 @@ func main() {
 		Auth:         authService,
 	})
 
-	fmt.Printf("Listening on %s\n", *bind)
-	log.Fatal(http.ListenAndServe(*bind, h))
+	httpServer := &http.Server{
+		Addr:    *bind,
+		Handler: h,
+	}
+
+	// Start the HTTP server.
+	httpServerErrorChan := make(chan error)
+	go func() {
+		fmt.Printf("HTTP server listening on %s", *bind)
+		httpServerErrorChan <- httpServer.ListenAndServe()
+	}()
+
+	// Set up the signal channel.
+	signalChan := make(chan os.Signal, 1)
+	signal.Notify(signalChan, syscall.SIGINT, syscall.SIGTERM)
+
+	select {
+	// If the HTTP server returned an error, exit here.
+	case err := <-httpServerErrorChan:
+		log.Printf("HTTP server error: %s", err)
+	// If a termination signal was received, shutdown the server.
+	case sig := <-signalChan:
+		log.Printf("Signal received: %s", sig)
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	if err := httpServer.Shutdown(ctx); err != nil {
+		log.Fatalf("HTTP Server graceful shutdown failed with an error: %s\n", err)
+	}
 }
