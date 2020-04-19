@@ -51,6 +51,15 @@ func (cart *ShoppingCart) HasProduct(productID int64) bool {
 	return false
 }
 
+func (cart *ShoppingCart) GetProduct(productID int64) (ShoppingCartItem, error) {
+	for _, item := range cart.Items {
+		if item.ProductID == productID {
+			return item, nil
+		}
+	}
+	return ShoppingCartItem{}, ErrCartItemNotFound
+}
+
 // ShoppingCartItem represents shopping cart entity
 // swagger:response ShoppingCartItem
 type ShoppingCartItem struct {

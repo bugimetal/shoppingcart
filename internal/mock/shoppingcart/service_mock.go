@@ -31,7 +31,7 @@ func (service *MockShoppingCartService) Empty(ctx context.Context, shoppingCartI
 	return nil
 }
 
-func (service *MockShoppingCartService) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
+func (service *MockShoppingCartService) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem, userID int64) error {
 	if err := cartItem.Validate(); err != nil {
 		return err
 	}

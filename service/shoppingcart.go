@@ -44,9 +44,25 @@ func (service *ShoppingCart) Empty(ctx context.Context, shoppingCartID, userID i
 }
 
 // AddProduct adds new product to existing shopping cart
-func (service *ShoppingCart) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
+// If product exists, quantity will be updated
+func (service *ShoppingCart) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem, userID int64) error {
 	if err := cartItem.Validate(); err != nil {
 		return err
+	}
+
+	cart, err := service.Get(ctx, cartItem.ShoppingCartID, userID)
+	if err != nil {
+		return err
+	}
+
+	if cart.HasProduct(cartItem.ProductID) {
+		existingItem, err := cart.GetProduct(cartItem.ProductID)
+		if err != nil {
+			return err
+		}
+		existingItem.Quantity += cartItem.Quantity
+		*cartItem = existingItem
+		return service.storage.UpdateProduct(ctx, cartItem)
 	}
 
 	return service.storage.AddProduct(ctx, cartItem)

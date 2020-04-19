@@ -172,23 +172,9 @@ func (handler *Handler) addProduct(w http.ResponseWriter, r *http.Request, ps ht
 		return
 	}
 
-	// Checking if shopping cart belong to this user
-	cart, err := handler.shoppingCartService.Get(r.Context(), cartID, user.ID)
-	if err != nil {
-		handler.Error(w, r, err)
-		return
-	}
+	cartItem.ShoppingCartID = cartID
 
-	if cart.HasProduct(cartItem.ProductID) {
-		// Product already added to the cart, returning error.
-		// Product can be also updated in this case, it depends on requirements
-		handler.Error(w, r, shoppingcart.ErrCartItemAlreadyExists)
-		return
-	}
-
-	cartItem.ShoppingCartID = cart.ID
-
-	if err := handler.shoppingCartService.AddProduct(r.Context(), &cartItem); err != nil {
+	if err := handler.shoppingCartService.AddProduct(r.Context(), &cartItem, user.ID); err != nil {
 		handler.Error(w, r, err)
 		logrus.Errorf("Unable to add shopping cart item %v: %s", cartItem, err)
 		return

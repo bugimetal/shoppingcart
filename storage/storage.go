@@ -12,5 +12,6 @@ type ShoppingCart interface {
 	Empty(ctx context.Context, shoppingCartID int64) error
 
 	AddProduct(context.Context, *shoppingcart.ShoppingCartItem) error
+	UpdateProduct(context.Context, *shoppingcart.ShoppingCartItem) error
 	RemoveProduct(ctx context.Context, shoppingCartID, productID int64) error
 }

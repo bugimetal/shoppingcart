@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/bugimetal/shoppingcart"
 	"github.com/bugimetal/shoppingcart/internal/mock/auth"
 
-	"github.com/bugimetal/shoppingcart"
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -23,7 +23,7 @@ type ShoppingCartService interface {
 	Get(ctx context.Context, shoppingCartID int64, userID int64) (shoppingcart.ShoppingCart, error)
 	Empty(ctx context.Context, shoppingCartID, userID int64) error
 
-	AddProduct(context.Context, *shoppingcart.ShoppingCartItem) error
+	AddProduct(ctx context.Context, item *shoppingcart.ShoppingCartItem, userID int64) error
 	RemoveProduct(ctx context.Context, shoppingCartID, productID, userID int64) error
 }
 

@@ -44,6 +44,14 @@ func (db *DB) AddProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCar
 	return nil
 }
 
+func (db *DB) UpdateProduct(ctx context.Context, cartItem *shoppingcart.ShoppingCartItem) error {
+	cartItem.UpdatedAt = time.Now()
+
+	db.client.Save(cartItem)
+
+	return nil
+}
+
 func (db *DB) RemoveProduct(ctx context.Context, shoppingCartID, productID int64) error {
 	db.client.
 		Where("shoppingcart_id = ? AND product_id = ?", shoppingCartID, productID).
