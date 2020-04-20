@@ -11,6 +11,7 @@ var (
 	ErrNoPassword = errors.New("no password provided")
 )
 
+// AuthService describes an interface to Authenticate users
 type AuthService interface {
 	Authenticate(context.Context, User) (User, error)
 }
@@ -18,6 +19,7 @@ type AuthService interface {
 type Auth struct {
 }
 
+// User describes basic user structure
 type User struct {
 	ID       int64  `json:"id"`
 	Name     string `json:"name"`
@@ -35,10 +37,12 @@ func (u User) Validate() error {
 	return nil
 }
 
+// New returns a new authorization service
 func New() AuthService {
 	return &Auth{}
 }
 
+// Authenticate authenticates user by given name and password.
 func (a *Auth) Authenticate(ctx context.Context, user User) (User, error) {
 	if err := user.Validate(); err != nil {
 		return user, err

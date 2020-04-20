@@ -86,7 +86,7 @@ func main() {
 	// Start the HTTP server.
 	httpServerErrorChan := make(chan error)
 	go func() {
-		fmt.Printf("HTTP server listening on %s", *bind)
+		fmt.Printf("HTTP server listening on %s\n", *bind)
 		httpServerErrorChan <- httpServer.ListenAndServe()
 	}()
 

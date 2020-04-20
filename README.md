@@ -1,12 +1,24 @@
 Shopping cart
 ======
+The Shopping cart service provides a basic functionality to work with shopping carts, like:
+* Create a shopping cart
+* Get information about shopping cart
+* Empty the shopping cart
+* Add product to the shopping cart
+* Remove product from the shopping cart
+
+This service doesn't hold information about products, users or orders. 
+In order to authorize the user, the service is using Auth service (mocked). 
+
 
 ## 1. The API
-To check full API documentation, please start the service and visit [Swagger API page](http://localhost:8080/swagger/).
-Instructions of how to run service locally can be found [here](#3-how-to-run-service-locally)
+To check full API documentation, please start the service locally and visit [Swagger API page](http://localhost:8080/swagger/).
+Instructions of how to run the service locally can be found [here](#3-how-to-run-service-locally)
 
 ## 2. Authentication
-Service is using Basic Authentication.
+Service is using Basic Authentication. 
+In order to verify user credentials Auth service is used. It's mocked, so any credentials will work.
+
 Example header: 
 ```
 Authorisation: Basic dXNlcjpwYXNzd29yZAo=
