@@ -2,10 +2,10 @@ Shopping cart
 ======
 The Shopping cart service provides a basic functionality to work with shopping carts, like:
 * Create a shopping cart
-* Get information about shopping cart
+* Get information about the shopping cart
 * Empty the shopping cart
-* Add product to the shopping cart
-* Remove product from the shopping cart
+* Add a product to the shopping cart
+* Remove a product from the shopping cart
 
 This service doesn't hold information about products, users or orders. 
 In order to authorize the user, the service is using Auth service (mocked). 
@@ -36,4 +36,4 @@ where we pass user:password base64 encoded.
 
 ## 4. How to run tests
 
-go test -v github.com/bugimetal/shoppingcart/...
+`go test -v github.com/bugimetal/shoppingcart/...`
